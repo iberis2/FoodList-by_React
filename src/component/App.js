@@ -5,6 +5,7 @@ import { getFoods } from "../api.js";
 function App() {
   const [items, setItems] = useState([]);
   const [order, setOrder] = useState("createdAt");
+  const [cursor, setCursor] = useState(null);
   const sortedItems = items.sort((a, b) => b[order] - a[order]);
 
   const handleDelete = (id) => {
@@ -15,13 +16,25 @@ function App() {
   const handleNewestClick = () => setOrder("createdAt");
   const handleCalorieClick = () => setOrder("calorie");
 
-  const handleLoad = async (props) => {
-    const { foods } = await getFoods(props);
-    setItems(foods);
+  const handleLoad = async (options) => {
+    const {
+      foods,
+      paging: { nextCursor },
+    } = await getFoods(options);
+    if (!options.cursor) {
+      setItems(foods);
+    } else {
+      setItems((prevItems) => [...prevItems, ...foods]);
+    }
+    setCursor(nextCursor);
+  };
+
+  const handleLoadMore = async () => {
+    await handleLoad({ order, cursor });
   };
 
   useEffect(() => {
-    handleLoad(order);
+    handleLoad({ order });
   }, [order]);
 
   return (
@@ -29,6 +42,7 @@ function App() {
       <button onClick={handleNewestClick}>최신순</button>
       <button onClick={handleCalorieClick}>칼로리순</button>
       <FoodList items={sortedItems} onDelete={handleDelete} />
+      {cursor && <button onClick={handleLoadMore}>더보기</button>}
     </div>
   );
 }
