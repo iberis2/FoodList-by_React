@@ -1,9 +1,9 @@
 import FoodList from "./FoodList";
-import originItems from "../mock.json";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getFoods } from "../api.js";
 
 function App() {
-  const [items, setItems] = useState(originItems);
+  const [items, setItems] = useState([]);
   const [order, setOrder] = useState("createdAt");
   const sortedItems = items.sort((a, b) => b[order] - a[order]);
 
@@ -18,6 +18,15 @@ function App() {
   const handleCalorieClick = () => {
     setOrder("calorie");
   };
+
+  const handleLoad = async () => {
+    const { foods } = await getFoods();
+    setItems(foods);
+  };
+
+  useEffect(() => {
+    handleLoad();
+  }, []);
 
   return (
     <div>
