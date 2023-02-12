@@ -5,20 +5,20 @@ import { useState } from "react";
 function App() {
   const [order, setOrder] = useState("createdAt");
 
-  const option = items.sort((a, b) => b[order] - a[order]);
+  const sortedItems = items.sort((a, b) => b[order] - a[order]);
 
-  const orderCreatedAt = () => {
+  const handleNewestClick = () => {
     setOrder("createdAt");
   };
-  const orderCalorie = () => {
+  const handleCalorieClick = () => {
     setOrder("calorie");
   };
 
   return (
     <div>
-      <button onClick={orderCreatedAt}>최신순</button>
-      <button onClick={orderCalorie}>칼로리순</button>
-      <FoodList items={option} />
+      <button onClick={handleNewestClick}>최신순</button>
+      <button onClick={handleCalorieClick}>칼로리순</button>
+      <FoodList items={sortedItems} />
     </div>
   );
 }
