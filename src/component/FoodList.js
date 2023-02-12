@@ -15,7 +15,7 @@ function FoodListItem({ item, onDelete }) {
     <div className="FoodListItem">
       <img src={imgUrl} alt={title} />
       <div>{title}</div>
-      <div>{calorie}</div>
+      <div>{`${calorie}kcal`}</div>
       <div>{content}</div>
       <div>{formatDate(createdAt)}</div>
       <button onClick={handleDeleteClick}>삭제</button>
