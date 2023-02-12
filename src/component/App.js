@@ -12,21 +12,17 @@ function App() {
     setItems(filteredItems);
   };
 
-  const handleNewestClick = () => {
-    setOrder("createdAt");
-  };
-  const handleCalorieClick = () => {
-    setOrder("calorie");
-  };
+  const handleNewestClick = () => setOrder("createdAt");
+  const handleCalorieClick = () => setOrder("calorie");
 
-  const handleLoad = async () => {
-    const { foods } = await getFoods();
+  const handleLoad = async (props) => {
+    const { foods } = await getFoods(props);
     setItems(foods);
   };
 
   useEffect(() => {
-    handleLoad();
-  }, []);
+    handleLoad(order);
+  }, [order]);
 
   return (
     <div>
