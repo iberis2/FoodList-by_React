@@ -1,10 +1,12 @@
 import { useState } from "react";
+import FileInput from "./FileInput.jsx";
 
 function FoodForm() {
   const [values, setValues] = useState({
     title: "",
     calorie: 0,
     content: "",
+    imgFile: null,
   });
 
   const changeNumber = (type, value) => {
@@ -17,11 +19,15 @@ function FoodForm() {
     }
   };
 
-  const handleChange = (e) => {
-    const { name, value, type } = e.target;
+  const handleChange = (name, value, type) => {
     setValues((preValues) => {
       return { ...preValues, [name]: changeNumber(type, value) };
     });
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value, type } = e.target;
+    handleChange(name, value, type);
   };
 
   const handleSubmit = (e) => {
@@ -31,23 +37,28 @@ function FoodForm() {
 
   return (
     <form className="ReviewForm" onSubmit={handleSubmit}>
+      <FileInput
+        name="imgFile"
+        value={values.imgFile}
+        onChange={handleChange}
+      />
       <input
         name="title"
         value={values.title}
         type="text"
-        onChange={handleChange}
+        onChange={handleInputChange}
       ></input>
       <input
         name="calorie"
         value={values.calorie}
         type="number"
-        onChange={handleChange}
+        onChange={handleInputChange}
       ></input>
       <input
         name="content"
         value={values.content}
         type="textarea"
-        onChange={handleChange}
+        onChange={handleInputChange}
       ></input>
       <button onSubmit={handleSubmit}> 확인 </button>
     </form>
