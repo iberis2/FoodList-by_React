@@ -1,30 +1,55 @@
 import { useState } from "react";
 
 function FoodForm() {
-  const [title, setTitle] = useState("");
-  const [calorie, setCalorie] = useState(0);
-  const [content, setContent] = useState("");
+  const [values, setValues] = useState({
+    title: "",
+    calorie: 0,
+    content: "",
+  });
+
+  const changeNumber = (type, value) => {
+    switch (type) {
+      case "number":
+        return Number(value) || 0;
+
+      default:
+        return value;
+    }
+  };
+
+  const handleChange = (e) => {
+    const { name, value, type } = e.target;
+    setValues((preValues) => {
+      return { ...preValues, [name]: changeNumber(type, value) };
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(values);
+  };
 
   return (
-    <form>
+    <form className="ReviewForm" onSubmit={handleSubmit}>
       <input
         name="title"
-        value={title}
+        value={values.title}
         type="text"
-        onChange={(e) => setTitle(e.target.value)}
+        onChange={handleChange}
       ></input>
       <input
         name="calorie"
-        value={calorie}
+        value={values.calorie}
         type="number"
-        onChange={(e) => setCalorie(e.target.value)}
+        onChange={handleChange}
       ></input>
       <input
         name="content"
-        value={content}
+        value={values.content}
         type="textarea"
-        onChange={(e) => setContent(e.target.value)}
+        onChange={handleChange}
       ></input>
+      <button onSubmit={handleSubmit}> 확인 </button>
     </form>
   );
 }
