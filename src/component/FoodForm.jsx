@@ -19,7 +19,7 @@ function FoodForm() {
     }
   };
 
-  const handleChange = (name, value, type) => {
+  const handleChange = (name, value, type = "text") => {
     setValues((preValues) => {
       return { ...preValues, [name]: changeNumber(type, value) };
     });
