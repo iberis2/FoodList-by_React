@@ -22,11 +22,10 @@ function App() {
   const handleCalorieClick = () => setOrder("calorie");
 
   const handleLoad = async (options) => {
-    let result;
     try {
       setIsLoading(true);
       setLoadingError(null);
-      result = await getFoods(options);
+      await getFoods(options);
     } catch (error) {
       setLoadingError(error);
       return;
@@ -54,13 +53,17 @@ function App() {
     setSearch(e.target["search"].value);
   };
 
+  const handleSubmit = (food) => {
+    setItems((prevItems) => [food, ...prevItems]);
+  };
+
   useEffect(() => {
     handleLoad({ order, search });
   }, [order, search]);
 
   return (
     <div>
-      <FoodForm />
+      <FoodForm onSubmitSuccess={handleSubmit} />
       <button onClick={handleNewestClick}>최신순</button>
       <button onClick={handleCalorieClick}>칼로리순</button>
       <form onSubmit={handleSearchSubmit}>
