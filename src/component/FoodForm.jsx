@@ -9,8 +9,14 @@ const INITIAL_VALUES = {
   imgFile: null,
 };
 
-function FoodForm({ onSubmitSuccess }) {
-  const [values, setValues] = useState(INITIAL_VALUES);
+function FoodForm({
+  onSubmit,
+  onSubmitSuccess,
+  onCancel,
+  initialValues = INITIAL_VALUES,
+  initialPreview,
+}) {
+  const [values, setValues] = useState(initialValues);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submittingError, setSubmittingError] = useState(null);
 
@@ -46,7 +52,7 @@ function FoodForm({ onSubmitSuccess }) {
     try {
       setIsSubmitting(true);
       setSubmittingError(null);
-      result = await createFoods(formData);
+      result = await onSubmit(formData);
     } catch (error) {
       setSubmittingError(error);
     } finally {
@@ -63,6 +69,7 @@ function FoodForm({ onSubmitSuccess }) {
         name="imgFile"
         value={values.imgFile}
         onChange={handleChange}
+        initialPreview={initialPreview}
       />
       <input
         name="title"
@@ -89,6 +96,7 @@ function FoodForm({ onSubmitSuccess }) {
         {" "}
         확인{" "}
       </button>
+      {onCancel && <button onClick={onCancel}> 취소 </button>}
       {submittingError?.message && <div>{submittingError.message}</div>}
     </form>
   );
