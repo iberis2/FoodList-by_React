@@ -1,5 +1,6 @@
 import { useState } from "react";
 import FileInput from "./FileInput.jsx";
+import useAsync from "../hooks/useAsync.js";
 
 const INITIAL_VALUES = {
   title: "",
@@ -16,8 +17,7 @@ function FoodForm({
   initialPreview,
 }) {
   const [values, setValues] = useState(initialValues);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submittingError, setSubmittingError] = useState(null);
+  const [isSubmitting, submittingError, asyncOnSubmit] = useAsync(onSubmit);
 
   const changeNumber = (type, value) => {
     switch (type) {
@@ -47,16 +47,9 @@ function FoodForm({
     formData.append("calorie", values.calorie);
     formData.append("content", values.content);
     formData.append("imgFile", values.imgFile);
-    let result;
-    try {
-      setIsSubmitting(true);
-      setSubmittingError(null);
-      result = await onSubmit(formData);
-    } catch (error) {
-      setSubmittingError(error);
-    } finally {
-      setIsSubmitting(false);
-    }
+
+    let result = await asyncOnSubmit(formData);
+
     const { food } = await result;
     setValues(INITIAL_VALUES);
     onSubmitSuccess(food);

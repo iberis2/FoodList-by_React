@@ -2,13 +2,13 @@ import FoodList from "./FoodList";
 import { useEffect, useState } from "react";
 import { getFoods, updateFoods, createFoods, deleteFoods } from "../api.js";
 import FoodForm from "./FoodForm";
+import useAsync from "../hooks/useAsync";
 
 function App() {
   const [items, setItems] = useState([]);
   const [order, setOrder] = useState("createdAt");
   const [cursor, setCursor] = useState(null);
-  const [loadingError, setLoadingError] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, loadingError, asyncGetFoods] = useAsync(getFoods);
   const [search, setSearch] = useState("");
 
   const sortedItems = items.sort((a, b) => b[order] - a[order]);
@@ -23,16 +23,9 @@ function App() {
   const handleCalorieClick = () => setOrder("calorie");
 
   const handleLoad = async (options) => {
-    try {
-      setIsLoading(true);
-      setLoadingError(null);
-      await getFoods(options);
-    } catch (error) {
-      setLoadingError(error);
-      return;
-    } finally {
-      setIsLoading(false);
-    }
+    let result = await asyncGetFoods(options);
+    if (!result) return;
+
     const {
       foods,
       paging: { nextCursor },
